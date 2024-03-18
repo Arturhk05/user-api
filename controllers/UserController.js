@@ -2,6 +2,7 @@ const PasswordToken = require("../models/PasswordToken")
 const User = require("../models/User")
 const jwt = require("jsonwebtoken")
 const bcrypt = require("bcrypt")
+const validator = require('validator');
 
 const secret = "dasdasdasjkhjkyhktfdwer"
 
@@ -23,20 +24,22 @@ class UserController {
     }
   }
 
-  async create(req,res) {
+  async create(req, res) {
     var {email, name, password} = req.body
 
-    if (email == undefined) {
-      res.status(400)
-      res.json({err: "O e-mail é invalido!"})
-      return
-    }
-    if (name == undefined) {
+    const isEmail = validator.isEmail(toString(email))
+
+    if (name == undefined || name == '' || name == ' ') {
       res.status(400)
       res.json({err: "O nome é invalido!"})
       return
     }
-    if (password == undefined) {
+    if (!isEmail) {
+      res.status(400)
+      res.json({err: "O e-mail é invalido!"})
+      return
+    }
+    if (password == undefined || password == '' || password == ' ') {
       res.status(400)
       res.json({err: "A senha é invalido!"})
       return
