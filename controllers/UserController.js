@@ -27,7 +27,7 @@ class UserController {
   async create(req, res) {
     var {email, name, password} = req.body
 
-    const isEmail = validator.isEmail(toString(email))
+    const isEmail = validator.isEmail(email)
 
     if (name == undefined || name == '' || name == ' ') {
       res.status(400)
@@ -49,14 +49,14 @@ class UserController {
 
     if (emailExists) {
       res.status(405)
-      res.json({err: "O e-email já está cadastrado!"})
+      res.json({err: "Esse e-email já está cadastrado!"})
       return
     }
 
     await User.new(email, password, name)
 
     res.status(200)
-    res.send("Pegando o corpo da requisição!")
+    res.send("Criando usuário!")
   }
 
   async edit(req, res) {
@@ -135,9 +135,10 @@ class UserController {
         res.send(token)
       } else {
         res.status(406)
-        res.send("Senha incorreta!")
+        res.send({status: false, err: "Senha incorreta!"})
       }
     } else {
+      res.status(400)
       res.json({status: false, err: "Usuário não encontrado!"})
     }
   }
